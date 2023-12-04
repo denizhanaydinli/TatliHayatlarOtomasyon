@@ -161,6 +161,18 @@ public class HelloApplication extends Application {
             showAlert("Ürün listesi alınırken bir hata oluştu.");
         }
 
+        urunListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                // Çift tıklama olayı
+                String selectedUrun = urunListView.getSelectionModel().getSelectedItem();
+                if (selectedUrun != null) {
+                    urunListesi.urunSil(selectedUrun);
+                    refreshUrunListesi(urunListView);
+                    showAlert("Ürün başarıyla silindi.");
+                }
+            }
+        });
+
         urunListesiGrid.add(urunListView, 0, 0);
 
         // Ürün Adı ve Fiyat giriş alanları
@@ -195,42 +207,18 @@ public class HelloApplication extends Application {
                 showAlert("Lütfen tüm alanları doldurun.");
             }
         });
-
-        // Güncelle butonu
-        guncelleButton.setOnAction(event -> {
-            String selectedUrun = urunListView.getSelectionModel().getSelectedItem();
-            if (selectedUrun != null) {
-                String[] parts = selectedUrun.split(": ");
-                int urunId = Integer.parseInt(parts[0]);
-                String urunAdi = urunAdiField.getText();
-                String fiyatStr = fiyatField.getText();
-
-                if (!urunAdi.isEmpty() && !fiyatStr.isEmpty()) {
-                    double fiyat = Double.parseDouble(fiyatStr);
-                    urunListesi.urunGuncelle(urunId, urunAdi, fiyat);
-                    refreshUrunListesi(urunListView);
-                    showAlert("Ürün başarıyla güncellendi.");
-                } else {
-                    showAlert("Lütfen tüm alanları doldurun.");
-                }
-            } else {
-                showAlert("Lütfen güncellenecek bir ürün seçin.");
-            }
-        });
-
-        // Sil butonu
         silButton.setOnAction(event -> {
             String selectedUrun = urunListView.getSelectionModel().getSelectedItem();
             if (selectedUrun != null) {
-                String[] parts = selectedUrun.split(": ");
-                int urunId = Integer.parseInt(parts[0]);
-                urunListesi.urunSil(urunId);
+                urunListesi.urunSil(selectedUrun);
                 refreshUrunListesi(urunListView);
                 showAlert("Ürün başarıyla silindi.");
             } else {
                 showAlert("Lütfen silinecek bir ürün seçin.");
             }
         });
+
+        // ... (diğer kodlar)
 
         Scene urunListesiScene = new Scene(urunListesiGrid, 500, 300);
         urunListesiStage.setScene(urunListesiScene);

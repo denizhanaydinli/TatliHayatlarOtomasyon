@@ -41,11 +41,18 @@ public class UrunListesi {
     }
 
     public void urunEkle(String urunAdi, double fiyat) {
-        String insertSQL = "INSERT INTO urunler (ad, fiyat) VALUES (?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
-            preparedStatement.setString(1, urunAdi);
-            preparedStatement.setDouble(2, fiyat);
-            preparedStatement.executeUpdate();
+        try {
+            if (!urunVarMi(urunAdi.toLowerCase())) {
+                String insertSQL = "INSERT INTO urunler (ad, fiyat) VALUES (?, ?)";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+                    preparedStatement.setString(1, urunAdi);
+                    preparedStatement.setDouble(2, fiyat);
+                    preparedStatement.executeUpdate();
+                }
+            } else {
+                // Ürün zaten varsa uyarı verebilir veya başka bir işlem yapabilirsiniz.
+                System.out.println("Bu ürün zaten var!");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,27 +70,37 @@ public class UrunListesi {
         }
     }
 
-    public void urunSil(int urunId) {
-        String deleteSQL = "DELETE FROM urunler WHERE id = ?";
+    public void urunSil(String urunAdi) {
+        String deleteSQL = "DELETE FROM urunler WHERE ad = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL)) {
-            preparedStatement.setInt(1, urunId);
+            preparedStatement.setString(1, urunAdi);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public boolean urunVarMi(String urunAdi) throws SQLException {
+        String selectSQL = "SELECT * FROM urunler WHERE ad = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
+            preparedStatement.setString(1, urunAdi);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
     public List<String> getUrunListesiAdlari() throws SQLException {
-        List<String> urunListesi = new ArrayList<>();
-        String selectSQL = "SELECT * FROM urunler";
+        List<String> urunAdlari = new ArrayList<>();
+        String selectSQL = "SELECT ad FROM urunler";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectSQL)) {
             while (resultSet.next()) {
-                String urunAdiFiyat = resultSet.getString("ad") + ": " + resultSet.getDouble("fiyat");
-                urunListesi.add(urunAdiFiyat);
+                String urunAdi = resultSet.getString("ad");
+                urunAdlari.add(urunAdi);
             }
         }
-        return urunListesi;
+        return urunAdlari;
     }
 
     public List<Urun> getUrunListesi() throws SQLException {
