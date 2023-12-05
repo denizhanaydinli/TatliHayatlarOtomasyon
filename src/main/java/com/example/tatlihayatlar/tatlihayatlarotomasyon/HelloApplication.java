@@ -176,7 +176,7 @@ public class HelloApplication extends Application {
             if (event.getClickCount() == 2) {
                 String selectedUrun = urunListView.getSelectionModel().getSelectedItem();
                 if (selectedUrun != null) {
-                    urunListesi.urunSil(selectedUrun);
+                    urunListesi.urunSil(selectedUrun.split(" : ")[0]);
                     refreshUrunListesi(urunListView);
                     showAlert("Ürün başarıyla silindi.");
                 }
