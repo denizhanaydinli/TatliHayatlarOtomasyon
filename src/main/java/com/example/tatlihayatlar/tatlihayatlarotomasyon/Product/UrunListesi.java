@@ -92,12 +92,13 @@ public class UrunListesi {
 
     public List<String> getUrunListesiAdlari() throws SQLException {
         List<String> urunAdlari = new ArrayList<>();
-        String selectSQL = "SELECT ad FROM urunler";
+        String selectSQL = "SELECT ad, fiyat FROM urunler";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectSQL)) {
             while (resultSet.next()) {
                 String urunAdi = resultSet.getString("ad");
-                urunAdlari.add(urunAdi);
+                double fiyat = resultSet.getDouble("fiyat");
+                urunAdlari.add(urunAdi + " : " + fiyat + " TL");
             }
         }
         return urunAdlari;

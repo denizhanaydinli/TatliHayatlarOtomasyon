@@ -35,7 +35,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Tatlı Hayatlar Cafe");
+        primaryStage.setTitle("Cafe Tatlı Hayatlar");
 
         // GridPane içinde Logo ve Masaları oluştur
         GridPane gridPane = new GridPane();
