@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HelloApplication extends Application {
@@ -91,8 +92,7 @@ public class HelloApplication extends Application {
         masaBilgisiLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
 
         // Masaya ait sipariş bilgilerini getir
-        String masaUrunAdi = "";  // Masa için kaydedilmiş ürün adı
-        double masaUrunFiyati = 0.0;  // Masa için kaydedilmiş ürün fiyatı
+        List<String> masaUrunAdlari = new ArrayList<>();  // Masa için kaydedilmiş ürün adları
 
         // Eğer masa dolu ise bilgileri çek
         try {
@@ -102,31 +102,28 @@ public class HelloApplication extends Application {
 
             // Örnek:
             // ResultSet resultSet = statement.executeQuery("SELECT * FROM siparisler WHERE masa_id = " + masa.getMasaNo());
-            // if (resultSet.next()) {
-            //    masaUrunAdi = resultSet.getString("urun_adi");
-            //    masaUrunFiyati = resultSet.getDouble("urun_fiyati");
+            // while (resultSet.next()) {
+            //    masaUrunAdlari.add(resultSet.getString("urun_adi"));
             // }
 
             // Eğer veritabanı kullanıyorsanız, gerçek veritabanı sorgularını kullanmalısınız.
             // Aşağıdaki satırlar sadece bir örnek olarak verilmiştir ve gerçek veritabanı yapınıza göre uyarlanmalıdır.
 
-            masaUrunAdi = "Ürün adı";  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
-            masaUrunFiyati = 20.0;  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
+            masaUrunAdlari.add("Ürün adı 1");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
+            masaUrunAdlari.add("Ürün adı 2");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
 
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Sipariş bilgileri alınırken bir hata oluştu.");
         }
 
-        // Ürün Adı ve Fiyat giriş alanları
-        Label urunAdiLabel = new Label("Ürün Adı: " + masaUrunAdi);
-        Label fiyatLabel = new Label("Fiyat: " + masaUrunFiyati);
+        VBox urunBilgisiVBox = new VBox();
+        urunBilgisiVBox.setSpacing(10);
+        urunBilgisiVBox.setAlignment(Pos.TOP_LEFT);
 
-        HBox urunBilgisiBox = new HBox(urunAdiLabel, new Separator(), fiyatLabel);
-        urunBilgisiBox.setAlignment(Pos.CENTER_LEFT);
-        urunBilgisiBox.setSpacing(10);
-
-        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+        for (String masaUrunAdi : masaUrunAdlari) {
+            urunBilgisiVBox.getChildren().add(new Label(masaUrunAdi));
+        }
 
         // Ürün listesini ve butonları ekle
         VBox urunlerVBox = new VBox();
@@ -140,6 +137,8 @@ public class HelloApplication extends Application {
                 urunButton.setOnAction(event -> {
                     // Ürün butonuna tıklandığında yapılacak işlemleri buraya ekleyebilirsiniz.
                     showAlert("Ürün seçildi: " + urunAdi);
+                    // Seçilen ürünü VBox'a ekleyin
+                    urunBilgisiVBox.getChildren().add(new Label(urunAdi));
                 });
                 urunlerVBox.getChildren().add(urunButton);
             }
@@ -148,7 +147,11 @@ public class HelloApplication extends Application {
             showAlert("Ürün listesi alınırken bir hata oluştu.");
         }
 
-        masaBilgisiPanel.getChildren().add(urunlerVBox);
+        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox);
+        urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
+        urunBilgisiBox.setSpacing(10);
+
+        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
     }
 
     private void showUrunListesiPopup() {
