@@ -3,6 +3,7 @@ package com.example.tatlihayatlar.tatlihayatlarotomasyon;
 import com.example.tatlihayatlar.tatlihayatlarotomasyon.Entity.Masa;
 import com.example.tatlihayatlar.tatlihayatlarotomasyon.Product.UrunListesi;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,11 +18,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HelloApplication extends Application {
 
@@ -129,17 +133,35 @@ public class HelloApplication extends Application {
         VBox urunlerVBox = new VBox();
         urunlerVBox.setSpacing(10);
         urunlerVBox.setAlignment(Pos.TOP_LEFT);
+        final double[] toplamFiyat = {0.0};
+        Label toplamFiyatLabel = new Label();
 
         try {
             List<String> urunAdlari = urunListesi.getUrunListesiAdlari();
             for (String urunAdi : urunAdlari) {
                 Button urunButton = new Button(urunAdi);
+
                 urunButton.setOnAction(event -> {
-                    // Ürün butonuna tıklandığında yapılacak işlemleri buraya ekleyebilirsiniz.
-                    showAlert("Ürün seçildi: " + urunAdi);
-                    // Seçilen ürünü VBox'a ekleyin
-                    urunBilgisiVBox.getChildren().add(new Label(urunAdi));
+                    try {
+                            showAlert("Ürün seçildi: " + urunAdi);
+                            // Seçilen ürünü VBox'a ekleyin
+                            urunBilgisiVBox.getChildren().add(new Label(urunAdi));
+
+                            //--
+                        toplamFiyat[0] += getNumericValue(urunAdi);
+                        toplamFiyatLabel.setText("Genel Toplam: " + toplamFiyat[0] + " TL");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.err.println("Hata: " + e.getMessage());
+                    }
                 });
+
+                Label urunFiyatLabel = new Label("Ürün Fiyatı: " + getNumericValue(urunAdi) + " TL");
+                double urunFiyat = getNumericValue(urunAdi);
+                // Seçilen ürünün fiyatını toplam fiyata ekle
+                toplamFiyat[0] += urunFiyat;
+                urunBilgisiVBox.getChildren().addAll(new Label(urunAdi), urunFiyatLabel);
                 urunlerVBox.getChildren().add(urunButton);
             }
         } catch (SQLException e) {
@@ -147,11 +169,31 @@ public class HelloApplication extends Application {
             showAlert("Ürün listesi alınırken bir hata oluştu.");
         }
 
+        urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
+
+
         HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
         masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+
+    }
+
+    private double getNumericValue(String input) {
+        // Sayısal ifadeleri bulmak için regex pattern'ı
+        Pattern pattern = Pattern.compile("\\d+(\\.\\d+)?");
+
+        // Matcher nesnesi oluştur
+        Matcher matcher = pattern.matcher(input);
+
+        // Eşleşen ifadeleri bul
+        while (matcher.find()) {
+            // Eşleşen sayısal ifadeyi dönüştür ve geriye döndür
+            return Double.parseDouble(matcher.group());
+        }
+
+        return 0.0; // Sayısal ifade bulunamazsa 0.0 döndür
     }
 
     private void showUrunListesiPopup() {
