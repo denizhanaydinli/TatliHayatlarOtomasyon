@@ -151,17 +151,16 @@ public class HelloApplication extends Application {
                         toplamFiyat[0] += getNumericValue(urunAdi);
                         toplamFiyatLabel.setText("Genel Toplam: " + toplamFiyat[0] + " TL");
 
+                        urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
+                        urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.err.println("Hata: " + e.getMessage());
                     }
                 });
 
-                Label urunFiyatLabel = new Label("Ürün Fiyatı: " + getNumericValue(urunAdi) + " TL");
-                double urunFiyat = getNumericValue(urunAdi);
-                // Seçilen ürünün fiyatını toplam fiyata ekle
-                toplamFiyat[0] += urunFiyat;
-                urunBilgisiVBox.getChildren().addAll(new Label(urunAdi), urunFiyatLabel);
+
                 urunlerVBox.getChildren().add(urunButton);
             }
         } catch (SQLException e) {
