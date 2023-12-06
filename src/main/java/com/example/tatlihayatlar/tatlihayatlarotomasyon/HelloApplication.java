@@ -113,8 +113,8 @@ public class HelloApplication extends Application {
             // Eğer veritabanı kullanıyorsanız, gerçek veritabanı sorgularını kullanmalısınız.
             // Aşağıdaki satırlar sadece bir örnek olarak verilmiştir ve gerçek veritabanı yapınıza göre uyarlanmalıdır.
 
-            masaUrunAdlari.add("Ürün adı 1");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
-            masaUrunAdlari.add("Ürün adı 2");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
+            //    masaUrunAdlari.add("Ürün adı 1");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
+            //   masaUrunAdlari.add("Ürün adı 2");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,8 +170,16 @@ public class HelloApplication extends Application {
 
         urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
 
+        // "Siparişleri Temizle" butonunu oluştur
+        Button temizleButton = new Button("Siparişleri Temizle");
+        temizleButton.setOnAction(e -> {
+            urunBilgisiVBox.getChildren().clear(); // Siparişleri temizle
+            toplamFiyat[0] = 0.0; // Toplam fiyatı sıfırla
+            toplamFiyatLabel.setText("Genel Toplam: 0.0 TL"); // Toplam fiyatı sıfırla
+        });
 
-        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox);
+
+        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
