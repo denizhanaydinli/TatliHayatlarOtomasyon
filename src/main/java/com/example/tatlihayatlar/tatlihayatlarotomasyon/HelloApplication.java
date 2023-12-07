@@ -37,6 +37,7 @@ public class HelloApplication extends Application {
 
     private ListView<String> urunListView = new ListView<>();
     private VBox masaBilgisiPanel = new VBox();
+    private final List<VBox> masaBilgisiPanels = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -52,6 +53,13 @@ public class HelloApplication extends Application {
         for (int i = 0; i < MAX_MASALAR; i++) {
             Masa masaEntity = new Masa(i + 1, false);
             Button masaButton = createMasaButton(masaEntity);
+
+            VBox masaBilgisiPanel = new VBox();
+            masaBilgisiPanel.setAlignment(Pos.TOP_LEFT);
+            masaBilgisiPanel.setSpacing(10);
+            masaBilgisiPanel.setPadding(new Insets(10));
+            masaBilgisiPanels.add(masaBilgisiPanel);
+
             gridPane.add(masaButton, i % MASALARI_SIRALA, i / MASALARI_SIRALA + 1);
         }
 
@@ -91,6 +99,7 @@ public class HelloApplication extends Application {
 
     private void showMasaBilgisi(Masa masa) {
         masaBilgisiPanel.getChildren().clear();
+        VBox masaBilgisiPanelForMasa = masaBilgisiPanels.get(masa.getMasaNo() - 1);
 
         Label masaBilgisiLabel = new Label("Masa Bilgisi - Masa " + masa.getMasaNo());
         masaBilgisiLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
@@ -183,7 +192,10 @@ public class HelloApplication extends Application {
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
-        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+        masaBilgisiPanelForMasa.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+
+        masaBilgisiPanel.getChildren().add(masaBilgisiPanelForMasa);
+        //masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
 
     }
 
