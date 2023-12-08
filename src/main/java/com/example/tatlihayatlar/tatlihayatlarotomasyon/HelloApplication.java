@@ -38,6 +38,7 @@ public class HelloApplication extends Application {
     private ListView<String> urunListView = new ListView<>();
     private VBox masaBilgisiPanel = new VBox();
     private final List<VBox> masaBilgisiPanels = new ArrayList<>();
+    private Button silButton;
 
     @Override
     public void start(Stage primaryStage) {
@@ -100,6 +101,14 @@ public class HelloApplication extends Application {
     private void showMasaBilgisi(Masa masa) {
         masaBilgisiPanel.getChildren().clear();
         VBox masaBilgisiPanelForMasa = masaBilgisiPanels.get(masa.getMasaNo() - 1);
+        VBox currentMasaBilgisiPanel = new VBox();
+
+        silButton = new Button("Sil");
+        silButton.setOnAction(e -> {
+            // En son eklenen masa bilgisi VBox'ını sil
+            masaBilgisiPanelForMasa.getChildren().remove(currentMasaBilgisiPanel);
+            masaBilgisiPanels.remove(currentMasaBilgisiPanel);
+        });
 
         Label masaBilgisiLabel = new Label("Masa Bilgisi - Masa " + masa.getMasaNo());
         masaBilgisiLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
@@ -188,12 +197,16 @@ public class HelloApplication extends Application {
         });
 
 
-        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
+        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton,silButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
-        masaBilgisiPanelForMasa.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+       // masaBilgisiPanelForMasa.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
 
+
+
+        currentMasaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+        masaBilgisiPanelForMasa.getChildren().add(currentMasaBilgisiPanel);
         masaBilgisiPanel.getChildren().add(masaBilgisiPanelForMasa);
         //masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
 
