@@ -38,7 +38,6 @@ public class HelloApplication extends Application {
     private ListView<String> urunListView = new ListView<>();
     private VBox masaBilgisiPanel = new VBox();
     private final List<VBox> masaBilgisiPanels = new ArrayList<>();
-    private Button silButton;
     private final List<Integer> masaNumbers = new ArrayList<>();
 
     @Override
@@ -104,12 +103,7 @@ public class HelloApplication extends Application {
         VBox masaBilgisiPanelForMasa = masaBilgisiPanels.get(masa.getMasaNo() - 1);
         VBox currentMasaBilgisiPanel = new VBox();
 
-        silButton = new Button("Sil");
-        silButton.setOnAction(e -> {
-            // En son eklenen masa bilgisi VBox'ını sil
-            masaBilgisiPanelForMasa.getChildren().remove(currentMasaBilgisiPanel);
-            masaBilgisiPanels.remove(currentMasaBilgisiPanel);
-        });
+
 
         Label masaBilgisiLabel = new Label("Masa Bilgisi - Masa " + masa.getMasaNo());
         masaBilgisiLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
@@ -198,7 +192,7 @@ public class HelloApplication extends Application {
         });
 
 
-        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton,silButton);
+        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
