@@ -39,6 +39,7 @@ public class HelloApplication extends Application {
     private VBox masaBilgisiPanel = new VBox();
     private final List<VBox> masaBilgisiPanels = new ArrayList<>();
     private Button silButton;
+    private final List<Integer> masaNumbers = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -201,14 +202,13 @@ public class HelloApplication extends Application {
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
 
-       // masaBilgisiPanelForMasa.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+        if (!masaNumbers.contains(masa.getMasaNo())) {
+            masaNumbers.add(masa.getMasaNo());
+            currentMasaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
+        }
+            masaBilgisiPanelForMasa.getChildren().add(currentMasaBilgisiPanel);
+            masaBilgisiPanel.getChildren().add(masaBilgisiPanelForMasa);
 
-
-
-        currentMasaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
-        masaBilgisiPanelForMasa.getChildren().add(currentMasaBilgisiPanel);
-        masaBilgisiPanel.getChildren().add(masaBilgisiPanelForMasa);
-        //masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, urunBilgisiBox);
 
     }
 
