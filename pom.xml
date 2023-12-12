@@ -89,7 +89,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass> com.example.tatlihayatlar.tatlihayatlarotomasyon/com.example.tatlihayatlar.tatlihayatlarotomasyon.HelloApplication</mainClass>
+                            <mainClass>com.example.tatlihayatlar.tatlihayatlarotomasyon.HelloApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
