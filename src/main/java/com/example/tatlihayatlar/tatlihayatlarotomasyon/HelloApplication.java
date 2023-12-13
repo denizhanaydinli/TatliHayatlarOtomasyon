@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +42,10 @@ public class HelloApplication extends Application {
     private final List<Integer> masaNumbers = new ArrayList<>();
 
     private final List<ListView<String>> masaUrunListeleri = new ArrayList<>();
+
+    private List<String> masaUrunVeFiyatListesi = new ArrayList<>();
+    private final double[] toplamFiyat = {0.0};
+    private final List<List<String>> masaUrunVeFiyatListeleri = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -157,6 +162,35 @@ public class HelloApplication extends Application {
         final double[] toplamFiyat = {0.0};
         Label toplamFiyatLabel = new Label();
 
+        List<String> masaUrunVeFiyatListesi = new ArrayList<>();  // Masa için kaydedilmiş ürün adları ve fiyatları
+
+
+        masaUrunVeFiyatListeleri.add(new ArrayList<>());  // Her masa için ayrı bir liste oluştur
+
+
+        masaUrunListView.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                String selectedUrun = masaUrunListView.getSelectionModel().getSelectedItem();
+                if (selectedUrun != null && selectedUrun.startsWith("Genel Toplam:")) {
+                    // "Genel Toplam" tıklanırsa işlem yapma
+                    return;
+                }
+
+                masaUrunListView.getItems().removeIf(item -> item.startsWith("Genel Toplam:"));
+
+                toplamFiyat[0] -= getNumericValue(selectedUrun);
+
+                masaUrunListView.getItems().remove(selectedUrun);
+                // Toplam fiyatı güncelle
+
+                masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
+
+
+
+
+            }
+        });
+
         try {
             List<String> urunAdlari = urunListesi.getUrunListesiAdlari();
             List<String> urunVeToplamListesi = new ArrayList<>();
@@ -203,6 +237,8 @@ public class HelloApplication extends Application {
             urunBilgisiVBox.getChildren().clear(); // Siparişleri temizle
             toplamFiyat[0] = 0.0; // Toplam fiyatı sıfırla
             toplamFiyatLabel.setText("Genel Toplam: 0.0 TL"); // Toplam fiyatı sıfırla
+            masaUrunListView.getItems().clear();
+           masaUrunListView.getItems().removeAll();
         });
 
 
@@ -220,6 +256,8 @@ public class HelloApplication extends Application {
 
 
     }
+
+
 
     private double getNumericValue(String input) {
         // Sayısal ifadeleri bulmak için regex pattern'ı
