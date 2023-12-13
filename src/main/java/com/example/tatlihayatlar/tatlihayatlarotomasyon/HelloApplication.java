@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class HelloApplication extends Application {
 
 
@@ -250,8 +254,17 @@ public class HelloApplication extends Application {
 
         });
 
+        Button fisOlusturButton = new Button("Fiş Oluştur");
+        fisOlusturButton.setOnAction(e -> {
+            if (urunVeToplamListesi.isEmpty()) {
+                showAlert("Fiş oluşturmak için sipariş eklemelisiniz.");
+            } else {
+                printFis(urunVeToplamListesi, toplamFiyat[0]);
+            }
+        });
 
-        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
+
+        HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton,fisOlusturButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
         masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView, urunBilgisiBox);
@@ -359,6 +372,22 @@ public class HelloApplication extends Application {
             showAlert("Ürün listesi alınırken bir hata oluştu.");
         }
     }
+
+    private void printFis(List<String> urunVeToplamListesi, double toplamFiyat) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("fis.txt"))) {
+            for (String urun : urunVeToplamListesi) {
+                writer.write(urun + "\n");
+            }
+            writer.write("Genel Toplam: " + toplamFiyat + " TL\n");
+
+            showAlert("Fiş başarıyla oluşturuldu. (fis.txt)");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Fiş oluşturulurken bir hata oluştu.");
+        }
+    }
+
+
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
