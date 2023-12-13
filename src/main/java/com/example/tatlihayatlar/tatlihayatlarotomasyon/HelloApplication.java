@@ -190,10 +190,10 @@ public class HelloApplication extends Application {
 
             }
         });
-
+        List<String> urunVeToplamListesi = new ArrayList<>();
         try {
             List<String> urunAdlari = urunListesi.getUrunListesiAdlari();
-            List<String> urunVeToplamListesi = new ArrayList<>();
+
             for (String urunAdi : urunAdlari) {
                 Button urunButton = new Button(urunAdi);
 
@@ -210,6 +210,7 @@ public class HelloApplication extends Application {
 
                         masaUrunListView.getItems().setAll(urunVeToplamListesi);
                         masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
+
 
                         urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
                         urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
@@ -234,18 +235,26 @@ public class HelloApplication extends Application {
         // "Siparişleri Temizle" butonunu oluştur
         Button temizleButton = new Button("Siparişleri Temizle");
         temizleButton.setOnAction(e -> {
-            urunBilgisiVBox.getChildren().clear(); // Siparişleri temizle
-            toplamFiyat[0] = 0.0; // Toplam fiyatı sıfırla
-            toplamFiyatLabel.setText("Genel Toplam: 0.0 TL"); // Toplam fiyatı sıfırla
             masaUrunListView.getItems().clear();
-           masaUrunListView.getItems().removeAll();
+
+            // Siparişleri temizle
+            urunBilgisiVBox.getChildren().clear();
+
+            // Toplam fiyatı sıfırla
+            toplamFiyat[0] = 0.0;
+
+            // Toplam fiyat label'ını güncelle
+            masaUrunListView.getItems().removeAll(urunVeToplamListesi);
+            urunVeToplamListesi.clear();
+
+
         });
 
 
         HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
-        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView, temizleButton);
+        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView, urunBilgisiBox);
 
         if (!masaNumbers.contains(masa.getMasaNo())) {
             masaNumbers.add(masa.getMasaNo());
