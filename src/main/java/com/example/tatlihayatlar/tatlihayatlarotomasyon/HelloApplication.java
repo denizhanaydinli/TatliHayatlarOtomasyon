@@ -125,28 +125,7 @@ public class HelloApplication extends Application {
         // Masaya ait sipariş bilgilerini getir
         List<String> masaUrunAdlari = new ArrayList<>();  // Masa için kaydedilmiş ürün adları
 
-        // Eğer masa dolu ise bilgileri çek
-        try {
-            // Masa ile ilgili bilgileri çek
-            // Bu kısımda ilgili veritabanı sorgularını kullanmalısınız.
-            // resultSet'den masaUrunAdi ve masaUrunFiyati'ni çekmelisiniz.
 
-            // Örnek:
-            // ResultSet resultSet = statement.executeQuery("SELECT * FROM siparisler WHERE masa_id = " + masa.getMasaNo());
-            // while (resultSet.next()) {
-            //    masaUrunAdlari.add(resultSet.getString("urun_adi"));
-            // }
-
-            // Eğer veritabanı kullanıyorsanız, gerçek veritabanı sorgularını kullanmalısınız.
-            // Aşağıdaki satırlar sadece bir örnek olarak verilmiştir ve gerçek veritabanı yapınıza göre uyarlanmalıdır.
-
-            //    masaUrunAdlari.add("Ürün adı 1");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
-            //   masaUrunAdlari.add("Ürün adı 2");  // Örnek değer, gerçek veritabanı değeri ile değiştirilmeli
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Sipariş bilgileri alınırken bir hata oluştu.");
-        }
 
         VBox urunBilgisiVBox = new VBox();
         urunBilgisiVBox.setSpacing(10);
@@ -267,7 +246,7 @@ public class HelloApplication extends Application {
         HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton,fisOlusturButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
-        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView, urunBilgisiBox);
+        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView);
 
         if (!masaNumbers.contains(masa.getMasaNo())) {
             masaNumbers.add(masa.getMasaNo());
