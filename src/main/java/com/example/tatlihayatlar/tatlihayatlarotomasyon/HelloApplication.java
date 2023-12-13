@@ -40,6 +40,8 @@ public class HelloApplication extends Application {
     private final List<VBox> masaBilgisiPanels = new ArrayList<>();
     private final List<Integer> masaNumbers = new ArrayList<>();
 
+    private final List<ListView<String>> masaUrunListeleri = new ArrayList<>();
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cafe Tatlı Hayatlar");
@@ -54,6 +56,9 @@ public class HelloApplication extends Application {
         for (int i = 0; i < MAX_MASALAR; i++) {
             Masa masaEntity = new Masa(i + 1, false);
             Button masaButton = createMasaButton(masaEntity);
+
+            ListView<String> masaUrunListView = new ListView<>();
+            masaUrunListeleri.add(masaUrunListView);
 
             VBox masaBilgisiPanel = new VBox();
             masaBilgisiPanel.setAlignment(Pos.TOP_LEFT);
@@ -142,6 +147,9 @@ public class HelloApplication extends Application {
             urunBilgisiVBox.getChildren().add(new Label(masaUrunAdi));
         }
 
+        ListView<String> masaUrunListView = masaUrunListeleri.get(masa.getMasaNo() - 1);
+        masaUrunListView.setPrefSize(200, 200);
+
         // Ürün listesini ve butonları ekle
         VBox urunlerVBox = new VBox();
         urunlerVBox.setSpacing(10);
@@ -151,6 +159,7 @@ public class HelloApplication extends Application {
 
         try {
             List<String> urunAdlari = urunListesi.getUrunListesiAdlari();
+            List<String> urunVeToplamListesi = new ArrayList<>();
             for (String urunAdi : urunAdlari) {
                 Button urunButton = new Button(urunAdi);
 
@@ -160,12 +169,17 @@ public class HelloApplication extends Application {
                             // Seçilen ürünü VBox'a ekleyin
                             urunBilgisiVBox.getChildren().add(new Label(urunAdi));
 
-                            //--
                         toplamFiyat[0] += getNumericValue(urunAdi);
                         toplamFiyatLabel.setText("Genel Toplam: " + toplamFiyat[0] + " TL");
 
+                        urunVeToplamListesi.add(urunAdi);
+
+                        masaUrunListView.getItems().setAll(urunVeToplamListesi);
+                        masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
+
                         urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
                         urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -195,6 +209,7 @@ public class HelloApplication extends Application {
         HBox urunBilgisiBox = new HBox(urunlerVBox, urunBilgisiVBox,temizleButton);
         urunBilgisiBox.setAlignment(Pos.TOP_LEFT);
         urunBilgisiBox.setSpacing(10);
+        masaBilgisiPanel.getChildren().addAll(masaBilgisiLabel, masaUrunListView, temizleButton);
 
         if (!masaNumbers.contains(masa.getMasaNo())) {
             masaNumbers.add(masa.getMasaNo());
