@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -19,7 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
+
+import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,8 +30,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -54,6 +54,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cafe Tatlı Hayatlar");
+        primaryStage.getIcons().add(new Image("/tatli_hayat.png"));
 
         // GridPane içinde Logo ve Masaları oluştur
         GridPane gridPane = new GridPane();
@@ -228,6 +229,7 @@ public class HelloApplication extends Application {
 
             // Toplam fiyat label'ını güncelle
             masaUrunListView.getItems().removeAll(urunVeToplamListesi);
+            masaUrunListView.getItems().clear();
             urunVeToplamListesi.clear();
 
 
@@ -257,8 +259,6 @@ public class HelloApplication extends Application {
 
 
     }
-
-
 
     private double getNumericValue(String input) {
         // Sayısal ifadeleri bulmak için regex pattern'ı
@@ -352,11 +352,15 @@ public class HelloApplication extends Application {
         }
     }
 
+    //eğer fişi pdf değilde txt ye basmak istiyorsan bu metodu kullan
     private void printFis(List<String> urunVeToplamListesi, double toplamFiyat) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("fis.txt"))) {
+            writer.write("Cafe Tatlı Hayatlar\n\n");
+            writer.write("---------------------\n");
             for (String urun : urunVeToplamListesi) {
                 writer.write(urun + "\n");
             }
+            writer.write("---------------------\n");
             writer.write("Genel Toplam: " + toplamFiyat + " TL\n");
 
             showAlert("Fiş başarıyla oluşturuldu. (fis.txt)");
@@ -365,9 +369,6 @@ public class HelloApplication extends Application {
             showAlert("Fiş oluşturulurken bir hata oluştu.");
         }
     }
-
-
-
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Uyarı");
@@ -375,7 +376,6 @@ public class HelloApplication extends Application {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
