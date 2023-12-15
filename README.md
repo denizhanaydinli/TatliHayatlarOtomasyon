@@ -13,5 +13,7 @@ Daha sonra bu ürün masa butonlarına tıkladıktan sonra sağ tarafta açılan
 
 ![image](https://github.com/denizhanaydinli/TatliHayatlarOtomasyon/assets/22793472/01c3ba2c-4d0c-4e4c-b152-a02fe22efed3)
 
+![image](https://github.com/denizhanaydinli/TatliHayatlarOtomasyon/assets/22793472/5658391a-e129-4e44-8683-073bec0482ef)
+
 
 Kodsal iyileştirmeler yapılacaktır.
