@@ -19,6 +19,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.print.*;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.PrinterName;
+
 
 
 import java.io.*;
@@ -364,11 +370,105 @@ public class HelloApplication extends Application {
             writer.write("Genel Toplam: " + toplamFiyat + " TL\n");
 
             showAlert("Fiş başarıyla oluşturuldu. (fis.txt)");
+
+            // Yazdırma işlemi
+           // printDocument(new File("fis.txt"));
+
+
+            // Belirli bir yazıcıya gönder.aşağıdaki satırda printerın adını yazarak ilgili yazıcıdan çıktı alması sağlanabilir.bu durumda kodu comment out edilecek
+            //printDocument(new File("fis.txt"), "samsunglaser");
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Fiş oluşturulurken bir hata oluştu.");
         }
     }
+
+  /*  private void printDocument(File file) {
+        try {
+            // Yazıcı adını belirle (örneğin, varsayılan yazıcıyı kullanalım)
+            PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+
+            if (printService != null) {
+                DocFlavor[] supportedFlavors = printService.getSupportedDocFlavors();
+
+                System.out.println("Desteklenen Belge Türleri:");
+
+                for (DocFlavor flavor : supportedFlavors) {
+                    System.out.println(flavor);
+                }
+            } else {
+                System.out.println("Varsayılan yazıcı bulunamadı.");
+            }
+
+            // Print işlemi için özellikleri belirle
+            PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
+           // attributeSet.add(new PrinterName(printService.getName(), DocFlavor.BYTE_ARRAY.AUTOSENSE));
+            attributeSet.add(new Copies(1));
+
+            // Yazdırma işlemi için hazırlık yap
+            DocPrintJob printJob = printService.createPrintJob();
+            FileInputStream fis = new FileInputStream(file);
+            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            Doc doc = new SimpleDoc(fis, flavor, null);
+
+            // Yazdırma işlemi başlat
+            printJob.print(doc, attributeSet);
+
+            // Kaynakları serbest bırak
+            fis.close();
+        } catch (PrintException | IOException e) {
+            e.printStackTrace();
+            showAlert("Yazdırma işleminde bir hata oluştu.");
+        }
+    }*/
+
+    //manuel printer service için kod
+    /*
+    private PrintService findPrintService(String printerName) {
+        // Tüm yazıcı servislerini al
+        PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
+
+        // İstenen yazıcıyı bul
+        for (PrintService service : printServices) {
+            if (service.getName().equalsIgnoreCase(printerName)) {
+                return service;
+            }
+        }
+
+        return null; // İstenen yazıcı bulunamazsa null döndür
+    }
+
+    private void printDocument(File file, String printerName) {
+        try {
+            // Yazıcı adını belirle
+            PrintService printService = findPrintService(printerName);
+
+            if (printService == null) {
+                showAlert("Belirtilen yazıcı bulunamadı.");
+                return;
+            }
+
+            // Print işlemi için özellikleri belirle
+            PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
+            attributeSet.add(new PrinterName(printService.getName(), null));
+            attributeSet.add(new Copies(1));
+
+            // Yazdırma işlemi için hazırlık yap
+            DocPrintJob printJob = printService.createPrintJob();
+            FileInputStream fis = new FileInputStream(file);
+            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            Doc doc = new SimpleDoc(fis, flavor, null);
+
+            // Yazdırma işlemi başlat
+            printJob.print(doc, attributeSet);
+
+            // Kaynakları serbest bırak
+            fis.close();
+        } catch (PrintException | IOException e) {
+            e.printStackTrace();
+            showAlert("Yazdırma işleminde bir hata oluştu.");
+        }
+    }*/
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Uyarı");
