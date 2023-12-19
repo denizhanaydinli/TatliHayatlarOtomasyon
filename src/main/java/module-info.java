@@ -3,6 +3,7 @@ module com.example.tatlihayatlar.tatlihayatlarotomasyon {
     requires javafx.fxml;
     requires java.sql;
     requires java.desktop;
+    requires org.xerial.sqlitejdbc;
 
 
     opens com.example.tatlihayatlar.tatlihayatlarotomasyon to javafx.fxml;

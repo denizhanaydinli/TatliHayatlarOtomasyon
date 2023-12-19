@@ -25,8 +25,12 @@ public class UrunListesi {
 
     private void initializeDatabase() {
         try {
+            // JDBC sürücüsünü yükle
+            Class.forName("org.sqlite.JDBC");
+
+            // Veritabanına bağlantı oluştur
             connection = DriverManager.getConnection("jdbc:sqlite:cafe.db");
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
