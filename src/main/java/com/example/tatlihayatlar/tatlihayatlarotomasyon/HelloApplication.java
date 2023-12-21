@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 public class HelloApplication extends Application {
 
@@ -156,6 +157,7 @@ public class HelloApplication extends Application {
 
 
         masaUrunVeFiyatListeleri.add(new ArrayList<>());  // Her masa için ayrı bir liste oluştur
+        List<String> urunVeToplamListesi = new ArrayList<>();
 
 
         masaUrunListView.setOnMouseClicked(event -> {
@@ -171,16 +173,16 @@ public class HelloApplication extends Application {
                 toplamFiyat[0] -= getNumericValue(selectedUrun);
 
                 masaUrunListView.getItems().remove(selectedUrun);
+
+                urunVeToplamListesi.remove(selectedUrun);
+
                 // Toplam fiyatı güncelle
 
                 masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
 
-
-
-
             }
         });
-        List<String> urunVeToplamListesi = new ArrayList<>();
+        //List<String> urunVeToplamListesi = new ArrayList<>();
         try {
             List<String> urunAdlari = urunListesi.getUrunListesiAdlari();
 
