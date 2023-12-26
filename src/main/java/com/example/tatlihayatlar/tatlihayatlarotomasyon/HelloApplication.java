@@ -30,9 +30,7 @@ import javax.print.attribute.standard.PrinterName;
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +55,7 @@ public class HelloApplication extends Application {
     private List<String> masaUrunVeFiyatListesi = new ArrayList<>();
     private final double[] toplamFiyat = {0.0};
     private final List<List<String>> masaUrunVeFiyatListeleri = new ArrayList<>();
+    private final double[][] masaToplamFiyatArray = new double[MAX_MASALAR][1];
 
     @Override
     public void start(Stage primaryStage) {
@@ -150,7 +149,7 @@ public class HelloApplication extends Application {
         VBox urunlerVBox = new VBox();
         urunlerVBox.setSpacing(10);
         urunlerVBox.setAlignment(Pos.TOP_LEFT);
-        final double[] toplamFiyat = {0.0};
+        double[] toplamFiyat = masaToplamFiyatArray[masa.getMasaNo() - 1];
         Label toplamFiyatLabel = new Label();
 
         List<String> masaUrunVeFiyatListesi = new ArrayList<>();  // Masa için kaydedilmiş ürün adları ve fiyatları
@@ -179,6 +178,8 @@ public class HelloApplication extends Application {
                 // Toplam fiyatı güncelle
 
                 masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
+
+                masaToplamFiyatArray[masa.getMasaNo() - 1] = toplamFiyat;
 
             }
         });
@@ -239,7 +240,6 @@ public class HelloApplication extends Application {
             masaUrunListView.getItems().removeAll(urunVeToplamListesi);
             masaUrunListView.getItems().clear();
             urunVeToplamListesi.clear();
-
 
         });
 
