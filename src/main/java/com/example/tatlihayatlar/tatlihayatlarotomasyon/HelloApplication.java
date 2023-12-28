@@ -57,6 +57,8 @@ public class HelloApplication extends Application {
     private final List<List<String>> masaUrunVeFiyatListeleri = new ArrayList<>();
     private final double[][] masaToplamFiyatArray = new double[MAX_MASALAR][1];
 
+    private final Map<Integer, List<String>> masaUrunVeToplamListesiMap = new HashMap<>();
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cafe Tatlı Hayatlar");
@@ -83,6 +85,8 @@ public class HelloApplication extends Application {
             masaBilgisiPanels.add(masaBilgisiPanel);
 
             gridPane.add(masaButton, i % MASALARI_SIRALA, i / MASALARI_SIRALA + 1);
+
+            masaUrunVeToplamListesiMap.put(masaEntity.getMasaNo(), new ArrayList<>());
         }
 
         // Sağ tarafta gösterilecek olan Masa Bilgisi Paneli
@@ -130,8 +134,8 @@ public class HelloApplication extends Application {
         masaBilgisiLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
 
         // Masaya ait sipariş bilgilerini getir
-        List<String> masaUrunAdlari = new ArrayList<>();  // Masa için kaydedilmiş ürün adları
-
+        //List<String> masaUrunAdlari = new ArrayList<>();  // Masa için kaydedilmiş ürün adları
+        List<String> masaUrunAdlari = masaUrunVeToplamListesiMap.get(masa.getMasaNo());
 
 
         VBox urunBilgisiVBox = new VBox();
@@ -152,11 +156,8 @@ public class HelloApplication extends Application {
         double[] toplamFiyat = masaToplamFiyatArray[masa.getMasaNo() - 1];
         Label toplamFiyatLabel = new Label();
 
-        List<String> masaUrunVeFiyatListesi = new ArrayList<>();  // Masa için kaydedilmiş ürün adları ve fiyatları
-
-
-        masaUrunVeFiyatListeleri.add(new ArrayList<>());  // Her masa için ayrı bir liste oluştur
-        List<String> urunVeToplamListesi = new ArrayList<>();
+        //List<String> urunVeToplamListesi = new ArrayList<>();
+        List<String> urunVeToplamListesi = masaUrunVeToplamListesiMap.get(masa.getMasaNo());
 
 
         masaUrunListView.setOnMouseClicked(event -> {
@@ -208,6 +209,8 @@ public class HelloApplication extends Application {
                         urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
                         urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
 
+                        masaUrunVeToplamListesiMap.put(masa.getMasaNo(), urunVeToplamListesi);
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -240,6 +243,7 @@ public class HelloApplication extends Application {
             masaUrunListView.getItems().removeAll(urunVeToplamListesi);
             masaUrunListView.getItems().clear();
             urunVeToplamListesi.clear();
+            masaUrunVeToplamListesiMap.put(masa.getMasaNo(), new ArrayList<>());
 
         });
 
