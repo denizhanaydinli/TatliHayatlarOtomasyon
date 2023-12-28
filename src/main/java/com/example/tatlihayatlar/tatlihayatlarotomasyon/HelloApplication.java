@@ -193,24 +193,24 @@ public class HelloApplication extends Application {
 
                 urunButton.setOnAction(event -> {
                     try {
-                            showAlert("Ürün seçildi: " + urunAdi);
-                            // Seçilen ürünü VBox'a ekleyin
+                        Optional<ButtonType> result = showAlertWithConfirmation("Ürün seçildi: " + urunAdi);
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
                             urunBilgisiVBox.getChildren().add(new Label(urunAdi));
 
-                        toplamFiyat[0] += getNumericValue(urunAdi);
-                        toplamFiyatLabel.setText("Genel Toplam: " + toplamFiyat[0] + " TL");
+                            toplamFiyat[0] += getNumericValue(urunAdi);
+                            toplamFiyatLabel.setText("Genel Toplam: " + toplamFiyat[0] + " TL");
 
-                        urunVeToplamListesi.add(urunAdi);
+                            urunVeToplamListesi.add(urunAdi);
 
-                        masaUrunListView.getItems().setAll(urunVeToplamListesi);
-                        masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
+                            masaUrunListView.getItems().setAll(urunVeToplamListesi);
+                            masaUrunListView.getItems().add("Genel Toplam: " + toplamFiyat[0] + " TL");
 
 
-                        urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
-                        urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
+                            urunBilgisiVBox.getChildren().remove(toplamFiyatLabel);
+                            urunBilgisiVBox.getChildren().add(toplamFiyatLabel);
 
-                        masaUrunVeToplamListesiMap.put(masa.getMasaNo(), urunVeToplamListesi);
-
+                            masaUrunVeToplamListesiMap.put(masa.getMasaNo(), urunVeToplamListesi);
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -286,6 +286,15 @@ public class HelloApplication extends Application {
         }
 
         return 0.0; // Sayısal ifade bulunamazsa 0.0 döndür
+    }
+
+    private Optional<ButtonType> showAlertWithConfirmation(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Onay");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        return alert.showAndWait();
     }
 
     private void showUrunListesiPopup() {
