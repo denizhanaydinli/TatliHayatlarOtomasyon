@@ -59,6 +59,8 @@ public class HelloApplication extends Application {
 
     private final Map<Integer, List<String>> masaUrunVeToplamListesiMap = new HashMap<>();
 
+    private final ToplamTutucu toplamTutucu = new ToplamTutucu();
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Cafe Tatlı Hayatlar");
@@ -386,12 +388,16 @@ public class HelloApplication extends Application {
 
             showAlert("Fiş başarıyla oluşturuldu. (fis.txt)");
 
-            // Yazdırma işlemi
-           // printDocument(new File("fis.txt"));
+            // Aylık, haftalık ve günlük toplamları güncelle
+            toplamTutucu.addAylarToplam(toplamFiyat);
+            toplamTutucu.addHaftalarToplam(toplamFiyat);
+            toplamTutucu.addGunlerToplam(toplamFiyat);
 
+            // Yazdırma işlemi
+            // printDocument(new File("fis.txt"));
 
             // Belirli bir yazıcıya gönder.aşağıdaki satırda printerın adını yazarak ilgili yazıcıdan çıktı alması sağlanabilir.bu durumda kodu comment out edilecek
-            //printDocument(new File("fis.txt"), "samsunglaser");
+            // printDocument(new File("fis.txt"), "samsunglaser");
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Fiş oluşturulurken bir hata oluştu.");
