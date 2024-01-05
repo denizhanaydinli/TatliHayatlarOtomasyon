@@ -1,6 +1,7 @@
 package com.example.tatlihayatlar.tatlihayatlarotomasyon;
 import java.io.*;
 import java.sql.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class ToplamTutucu {
         }
     }
     private void writeToplamlarToFile() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH),false)) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             String selectSQL = "SELECT tarih, tip, toplam FROM toplamlar ORDER BY tarih DESC LIMIT 6";
             try (Statement statement = connection.createStatement();
                  ResultSet resultSet = statement.executeQuery(selectSQL)) {
@@ -76,7 +77,7 @@ public class ToplamTutucu {
                     String tip = resultSet.getString("tip");
                     double toplam = resultSet.getDouble("toplam");
                     String line = tarih + " - " + tip + ": " + toplam + " TL";
-                    writer.println(line);
+                    writer.write(line);
                 }
             }
         } catch (SQLException | IOException e) {
@@ -101,7 +102,7 @@ public class ToplamTutucu {
     }
 
     private void writeToFile(String content, String fileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             // Sadece belirli bir tarih için bir kere yazma kontrolü yapalım.
             if (!isDateAlreadyWritten(content)) {
                 writer.write(content + "\n");
@@ -125,7 +126,7 @@ public class ToplamTutucu {
     }
 
     private void saveToFile() {
-        String selectSQL = "SELECT tarih, tip, toplam FROM toplamlar";
+        String selectSQL = "SELECT tarih, tip, toplam FROM toplamlar ORDER BY tarih DESC LIMIT 3";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(selectSQL)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
@@ -142,20 +143,12 @@ public class ToplamTutucu {
         }
     }
 
-    private void loadFromFile() {
-        // Veritabanından okuma işlemi yapmak yerine dosyadan okuma işlemi gerçekleştirilecek.
-        // Bu nedenle bu metodun içeriği değişecek.
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void addAylarToplam(double toplam) {
+        // Her ayın başında aylık toplamı sıfırla
+        if (LocalDate.now().getDayOfMonth() == 1) {
+            setAylarToplam(0.0);
+        }
         double aylarToplam = getAylarToplam() + toplam;
         setAylarToplam(aylarToplam);
         addToplam("Aylık", toplam);
@@ -163,6 +156,10 @@ public class ToplamTutucu {
     }
 
     public void addHaftalarToplam(double toplam) {
+
+        if (LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY) {
+            setHaftalarToplam(0.0);
+        }
         double haftalarToplam = getHaftalarToplam() + toplam;
         setHaftalarToplam(haftalarToplam);
         addToplam("Haftalık", toplam);
@@ -172,8 +169,19 @@ public class ToplamTutucu {
     public void addGunlerToplam(double toplam) {
         double gunlerToplam = getGunlerToplam() + toplam;
         setGunlerToplam(gunlerToplam);
+        if (isEndOfDay()) {
+            setGunlerToplam(0.0);
+        }
         addToplam("Günlük", toplam);
         saveToFile();
+    }
+    private boolean isEndOfDay() {
+        // Şu anki zamanı al
+        LocalDate now = LocalDate.now();
+        // Günün son saatini al (23:59:59)
+        LocalDate endOfDay = LocalDate.from(now.atTime(23, 59, 59));
+        // Şu anki zaman, günün son saati veya sonrasında mı kontrol et
+        return now.isAfter(endOfDay);
     }
 
     private double getAylarToplam() {
